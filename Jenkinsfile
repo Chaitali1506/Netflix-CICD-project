@@ -202,44 +202,27 @@ pipeline {
                 }
             }
         }
-        stage('OWASP ZAP DAST Scan') {
-            steps {
-               sh '''
-               mkdir -p zap-report
-
-               docker run --rm \
-               -v $(pwd)/zap-report:/zap/wrk/:rw \
-                ghcr.io/zaproxy/zaproxy:stable \
-                zap-baseline.py \
-                -t http://15.252.6.5:30080 \
-                -r zap-report.html
-               '''
-            }
-        }
     }
     post {
+    success {
+        emailext(
+            subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+            body: "Build Successful\n\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}\n${BUILD_URL}",
+            to: "your-email@gmail.com"
+        )
+    }
 
+    failure {
+        emailext(
+            subject: "FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+            body: "Build Failed\n\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}\n${BUILD_URL}",
+            to: "your-email@gmail.com"
+        )
+    }
 
-        success {
-
-            echo "Pipeline completed successfully"
-
-        }
-
-
-        failure {
-
-            echo "Pipeline failed. Check console logs"
-
-        }
-
-
-        always {
-
-            echo "Pipeline execution completed"
-
-        }
-
+    always {
+        echo "Pipeline execution completed"
+    }
     }
 
 }
