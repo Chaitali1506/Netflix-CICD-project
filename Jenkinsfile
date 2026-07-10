@@ -48,32 +48,11 @@ pipeline {
             }
         }
 
-        stage('Trivy File System Scan') {
-            steps {
-                sh '''
-                trivy fs . \
-                --format table
-                '''
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh '''
                 docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                 docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
-                '''
-            }
-        }
-
-        stage('Trivy Image Scan') {
-            steps {
-                sh '''
-                trivy image \
-                --format template \
-                --template "@contrib/html.tpl" \
-                -o ${TRIVY_REPORT} \
-                ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
         }
@@ -104,32 +83,4 @@ pipeline {
             }
         }
 
-        stage('Deploy Container') {
-            steps {
-                sh '''
-                docker rm -f netflix-clone || true
-
-                docker run -d \
-                --name netflix-clone \
-                -p 3000:80 \
-                ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
-            }
-        }
-    }
-
-    post {
-
-        success {
-            echo 'Netflix CI/CD Pipeline completed successfully.'
-        }
-
-        failure {
-            echo 'Netflix CI/CD Pipeline failed.'
-        }
-
-        always {
-            cleanWs()
-        }
-    }
-}
+        
