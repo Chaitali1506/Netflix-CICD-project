@@ -202,12 +202,21 @@ pipeline {
                 }
             }
         }
+        stage('OWASP ZAP DAST Scan') {
+            steps {
+               sh '''
+               mkdir -p zap-report
 
-
+               docker run --rm \
+               -v $(pwd)/zap-report:/zap/wrk/:rw \
+                ghcr.io/zaproxy/zaproxy:stable \
+                zap-baseline.py \
+                -t http://15.252.6.5:30080 \
+                -r zap-report.html
+               '''
+            }
+        }
     }
-
-
-
     post {
 
 
