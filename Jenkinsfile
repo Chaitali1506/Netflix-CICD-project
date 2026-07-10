@@ -1,11 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        sonarQube 'sonar-scanner'
-    }
-
     environment {
+        SCANNER_HOME = tool 'sonar-scanner'
         IMAGE_NAME = "chaitali1513/netflix-clone"
         IMAGE_TAG  = "${BUILD_NUMBER}"
 
@@ -31,14 +28,14 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                    -Dsonar.projectName="${SONAR_PROJECT_NAME}" \
-                    -Dsonar.sources=. \
-                    -Dsonar.sourceEncoding=UTF-8
-                    '''
+               withSonarQubeEnv('sonar-server') {
+                   sh """
+                       ${SCANNER_HOME}/bin/sonar-scanner \
+                       -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                       -Dsonar.projectName="${SONAR_PROJECT_NAME}" \
+                       -Dsonar.sources=. \
+                       -Dsonar.sourceEncoding=UTF-8
+                    """
                 }
             }
         }
