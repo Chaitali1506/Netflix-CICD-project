@@ -198,7 +198,6 @@ pipeline {
                     sudo kubectl rollout status deployment/netflix-deployment
                     sudo kubectl get pods
                     sudo kubectl get svc
-        EOF
                   '''
                 }
             }
