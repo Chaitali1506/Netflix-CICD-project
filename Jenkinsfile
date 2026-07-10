@@ -188,7 +188,7 @@ pipeline {
                   sh '''
                   ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.5 "mkdir -p ~/netflix/k8s"
 
-                  scp -o StrictHostKeyChecking=no k8s/*.yaml \
+                  scp -o StrictHostKeyChecking=no k3s/*.yaml \
                   ubuntu@15.252.6.5:~/netflix/k8s/
 
                   ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.5 << EOF
