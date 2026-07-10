@@ -182,6 +182,19 @@ pipeline {
             }
 
         }
+        stage('Deploy to k3s') {
+            steps {
+               sh '''
+                   kubectl apply -f k8s/deployment.yaml
+                   kubectl apply -f k8s/service.yaml
+
+                   kubectl rollout status deployment/netflix-deployment
+
+                   kubectl get pods
+                   kubectl get svc
+                '''
+            }
+        }
 
 
     }
