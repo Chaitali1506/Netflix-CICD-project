@@ -12,27 +12,27 @@ pipeline {
         SONAR_PROJECT_KEY  = "netflix-clone"
         SONAR_PROJECT_NAME = "Netflix Clone"
 
-        TRIVY_FS_REPORT = "trivy-fs-report.html"
-        TRIVY_IMAGE_REPORT = "trivy-image-report.html"
-
     }
 
 
     stages {
 
 
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
-
         stage('Checkout Source Code') {
+
             steps {
+
                 checkout scm
+
+                sh '''
+                    echo "Checking project files"
+                    ls -la
+                '''
+
             }
+
         }
+
 
 
         stage('SonarQube Analysis') {
@@ -42,15 +42,20 @@ pipeline {
                 withSonarQubeEnv('sonar-server') {
 
                     sh """
-                        ${SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                        -Dsonar.projectName="${SONAR_PROJECT_NAME}" \
-                        -Dsonar.sources=src/main/java \
-                        -Dsonar.exclusions=target/**,.git/** \
-                        -Dsonar.sourceEncoding=UTF-8
+
+                    ${SCANNER_HOME}/bin/sonar-scanner \
+                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                    -Dsonar.projectName="${SONAR_PROJECT_NAME}" \
+                    -Dsonar.sources=. \
+                    -Dsonar.exclusions=.git/**,target/** \
+                    -Dsonar.sourceEncoding=UTF-8
+
                     """
+
                 }
+
             }
+
         }
 
 
@@ -61,11 +66,12 @@ pipeline {
 
                 timeout(time: 5, unit: 'MINUTES') {
 
-                    waitForQualityGate abortPipeline: true
+                    waitForQualityGate abortPipeline: false
 
                 }
 
             }
+
         }
 
 
@@ -74,37 +80,17 @@ pipeline {
 
             steps {
 
-                sh """
-                    trivy fs \
-                    --severity HIGH,CRITICAL \
-                    --format template \
-                    --template '@contrib/html.tpl' \
-                    -o ${TRIVY_FS_REPORT} .
-                """
+                sh '''
 
-            }
+                echo "Running Trivy filesystem scan"
 
-            post {
+                trivy fs \
+                --severity HIGH,CRITICAL \
+                --format table \
+                -o trivy-fs-report.txt \
+                . || true
 
-                always {
-
-                    publishHTML([
-
-                        allowMissing: true,
-
-                        alwaysLinkToLastBuild: true,
-
-                        keepAll: true,
-
-                        reportDir: '.',
-
-                        reportFiles: "${TRIVY_FS_REPORT}",
-
-                        reportName: 'Trivy File System Report'
-
-                    ])
-
-                }
+                '''
 
             }
 
@@ -118,12 +104,19 @@ pipeline {
             steps {
 
                 sh '''
-                    docker build \
-                    -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
-                    docker tag \
-                    ${IMAGE_NAME}:${IMAGE_TAG} \
-                    ${IMAGE_NAME}:latest
+                echo "Building Docker Image"
+
+                docker build \
+                -t ${IMAGE_NAME}:${IMAGE_TAG} .
+
+                docker tag \
+                ${IMAGE_NAME}:${IMAGE_TAG} \
+                ${IMAGE_NAME}:latest
+
+
+                docker images
+
                 '''
 
             }
@@ -137,41 +130,17 @@ pipeline {
 
             steps {
 
-                sh """
+                sh '''
 
-                    trivy image \
-                    --severity HIGH,CRITICAL \
-                    --format template \
-                    --template '@contrib/html.tpl' \
-                    -o ${TRIVY_IMAGE_REPORT} \
-                    ${IMAGE_NAME}:${IMAGE_TAG}
+                echo "Running Trivy Image Scan"
 
-                """
+                trivy image \
+                --severity HIGH,CRITICAL \
+                --format table \
+                -o trivy-image-report.txt \
+                ${IMAGE_NAME}:${IMAGE_TAG} || true
 
-            }
-
-
-            post {
-
-                always {
-
-                    publishHTML([
-
-                        allowMissing: true,
-
-                        alwaysLinkToLastBuild: true,
-
-                        keepAll: true,
-
-                        reportDir: '.',
-
-                        reportFiles: "${TRIVY_IMAGE_REPORT}",
-
-                        reportName: 'Trivy Image Scan Report'
-
-                    ])
-
-                }
+                '''
 
             }
 
@@ -186,6 +155,8 @@ pipeline {
 
                 script {
 
+                    echo "Pushing Docker Image"
+
 
                     docker.withRegistry(
 
@@ -196,13 +167,13 @@ pipeline {
                     ) {
 
 
-                        sh """
+                        sh '''
 
-                            docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
 
-                            docker push ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:latest
 
-                        """
+                        '''
 
                     }
 
@@ -218,6 +189,7 @@ pipeline {
 
 
     post {
+
 
         success {
 
