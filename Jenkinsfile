@@ -186,12 +186,12 @@ pipeline {
             steps {
                sshagent(credentials: ['K3S-key']) {
                   sh '''
-                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.5 "mkdir -p ~/netflix/k8s"
+                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 "mkdir -p ~/netflix/k8s"
 
                   scp -o StrictHostKeyChecking=no k3s/*.yaml \
-                  ubuntu@15.252.6.5:~/netflix/k8s/
+                  ubuntu@15.252.6.214:~/netflix/k8s/
 
-                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.5 << EOF
+                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 << EOF
                     cd ~/netflix/k8s
                     sudo kubectl apply -f deployment.yaml
                     sudo kubectl apply -f service.yaml
@@ -208,7 +208,7 @@ pipeline {
         emailext(
             subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
             body: "Build Successful\n\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}\n${BUILD_URL}",
-            to: "your-email@gmail.com"
+            to: "chaitalikale1512003@gmail.com"
         )
     }
 
@@ -216,7 +216,7 @@ pipeline {
         emailext(
             subject: "FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
             body: "Build Failed\n\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}\n${BUILD_URL}",
-            to: "your-email@gmail.com"
+            to: "chaitalikale1512003@gmail.com"
         )
     }
 
