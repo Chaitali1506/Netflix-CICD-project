@@ -1,14 +1,15 @@
 
 # Netflix Clone - DevSecOps CI/CD Pipeline
 
+
+<img width="1672" height="941" alt="Netflix-CICD-Workflow" src="https://github.com/user-attachments/assets/d7365b0d-9b68-49ea-9acf-98efc65567d6" />
+
 ##  Project Overview
 
 This project demonstrates a complete DevSecOps CI/CD pipeline for deploying a Netflix Clone application. The pipeline automates the entire software delivery process—from source code checkout to deployment on a Kubernetes cluster—while integrating security and quality checks at every stage.
-<img width="1672" height="941" alt="Netflix-CICD-Workflow" src="https://github.com/user-attachments/assets/d7365b0d-9b68-49ea-9acf-98efc65567d6" />
 
 
 The objective of this project is to showcase practical implementation of DevSecOps tools and best practices used in real-world software development.
-
 ---
 
 ## Features
@@ -23,7 +24,6 @@ The objective of this project is to showcase practical implementation of DevSecO
 - Kubernetes (K3s) Deployment
 - Email notification after pipeline execution
 - Automated deployment with minimal manual intervention
-
 ---
 
 ## Tech Stack
@@ -39,11 +39,8 @@ The objective of this project is to showcase practical implementation of DevSecO
 | Orchestration | Kubernetes (K3s) |
 | Frontend | HTML, CSS, JavaScript |
 | Operating System | Ubuntu |
-
 ---
-
 ##  Project Structure
-
 ```
 Netflix-Clone/
 │
@@ -53,11 +50,8 @@ Netflix-Clone/
 ├── index.js
 └── README.md
 ```
-
 ---
-
 ## CI/CD Pipeline Workflow
-
 ```
 GitHub
    │
@@ -73,9 +67,7 @@ Jenkins Pipeline
    ├── Deploy to Kubernetes (K3s)
    └── Send Email Notification
 ```
-
 ---
-
 ##  Pipeline Stages
 
 ### 1. Source Code Checkout
@@ -101,9 +93,7 @@ Deploys the application to a K3s Kubernetes cluster.
 
 ### 8. Email Notification
 Sends build status notifications after every pipeline execution.
-
 ---
-
 ##  Prerequisites
 
 Before running this project, install:
@@ -116,9 +106,7 @@ Before running this project, install:
 - kubectl
 - K3s Kubernetes
 - Docker Hub Account
-
 ---
-
 ##  How to Run
 
 ### Clone Repository
@@ -127,7 +115,6 @@ Before running this project, install:
 git clone https://github.com/your-username/Netflix-Clone.git
 cd Netflix-Clone
 ```
-
 ### Configure Jenkins
 
 - Install required plugins
@@ -149,23 +136,17 @@ The pipeline will automatically:
 - Push image to Docker Hub
 - Deploy to Kubernetes
 - Send email notification
-
 ---
-
 ##  Access Application
 
 After successful deployment, open:
-
 ```
 http://<Jenkins-IP>:30080
 ```
-
 Example:
-
 ```
 http://192.168.1.100:30080
 ```
-
 ---
 
 ## Security Checks
@@ -177,7 +158,6 @@ http://192.168.1.100:30080
 ✔ Trivy Docker Image Scan
 
 These checks help identify security vulnerabilities before deployment.
-
 ---
 
 ## Learning Outcomes
@@ -191,7 +171,6 @@ Through this project, I gained practical experience in:
 - Security scanning using Trivy
 - Code quality analysis using SonarQube
 - Jenkins pipeline automation
-
 ---
 
 ## Author
