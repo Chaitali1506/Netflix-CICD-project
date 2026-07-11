@@ -1,8 +1,11 @@
+
 # Netflix Clone - DevSecOps CI/CD Pipeline
 
 ##  Project Overview
 
 This project demonstrates a complete DevSecOps CI/CD pipeline for deploying a Netflix Clone application. The pipeline automates the entire software delivery process—from source code checkout to deployment on a Kubernetes cluster—while integrating security and quality checks at every stage.
+<img width="1672" height="941" alt="Netflix-CICD-Workflow" src="https://github.com/user-attachments/assets/d7365b0d-9b68-49ea-9acf-98efc65567d6" />
+
 
 The objective of this project is to showcase practical implementation of DevSecOps tools and best practices used in real-world software development.
 
