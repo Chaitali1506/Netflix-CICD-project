@@ -1,8 +1,9 @@
 
-# Netflix Clone - DevSecOps CI/CD Pipeline
+# Netflix- DevSecOps CI/CD Pipeline
 
 
-<img width="1672" height="941" alt="Netflix-CICD-Workflow" src="https://github.com/user-attachments/assets/d7365b0d-9b68-49ea-9acf-98efc65567d6" />
+<img width="1536" height="1024" alt="Netflix-CICD-Workflow" src="https://github.com/user-attachments/assets/000cb29b-8923-4910-811a-ba94438a6e58" />
+
 
 ##  Project Overview
 
