@@ -191,12 +191,12 @@ pipeline {
                     '''
                     sshagent(credentials: ['K3S-key']) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 "mkdir -p ~/netflix/k8s"
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.110.229.177"mkdir -p ~/netflix/k8s"
 
                         scp -o StrictHostKeyChecking=no k3s/*.yaml \
                         ubuntu@3.110.229.177:~/netflix/k8s/
 
-                        ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 << EOF
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.110.229.177 << EOF
                             cd ~/netflix/k8s
                             sudo kubectl apply -f deployment.yaml
                             sudo kubectl apply -f service.yaml
