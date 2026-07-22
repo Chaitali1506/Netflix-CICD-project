@@ -17,12 +17,27 @@ spec:
         app: netflix
 
     spec:
+      # Disable automatic mounting of the service account token
+      automountServiceAccountToken: false
+
       containers:
-      - name: netflix
+        - name: netflix
 
-        image: chaitali1513/netflix-clone:latest
+          # Use a specific image tag instead of latest
+          image: chaitali1513/netflix-clone:IMAGE_TAG
 
-        imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
 
-        ports:
-        - containerPort: 80
+          ports:
+            - containerPort: 80
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+              ephemeral-storage: "1Gi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+              ephemeral-storage: "2Gi"

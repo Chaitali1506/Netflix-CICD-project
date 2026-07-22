@@ -184,21 +184,27 @@ pipeline {
         }
         stage('Deploy to k3s') {
             steps {
-               sshagent(credentials: ['K3S-key']) {
-                  sh '''
-                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 "mkdir -p ~/netflix/k8s"
+                script {
+                    sh '''
+                    sed -i "s/IMAGE_TAG/${IMAGE_TAG}/g" k3s/deployment.yaml
+                    cat k3s/deployment.yaml
+                    '''
+                    sshagent(credentials: ['K3S-key']) {
+                        sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 "mkdir -p ~/netflix/k8s"
 
-                  scp -o StrictHostKeyChecking=no k3s/*.yaml \
-                  ubuntu@15.252.6.214:~/netflix/k8s/
+                        scp -o StrictHostKeyChecking=no k3s/*.yaml \
+                        ubuntu@3.110.229.177:~/netflix/k8s/
 
-                  ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 << EOF
-                    cd ~/netflix/k8s
-                    sudo kubectl apply -f deployment.yaml
-                    sudo kubectl apply -f service.yaml
-                    sudo kubectl rollout status deployment/netflix-deployment
-                    sudo kubectl get pods
-                    sudo kubectl get svc
-                  '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@15.252.6.214 << EOF
+                            cd ~/netflix/k8s
+                            sudo kubectl apply -f deployment.yaml
+                            sudo kubectl apply -f service.yaml
+                            sudo kubectl rollout status deployment/netflix-deployment
+                            sudo kubectl get pods
+                            sudo kubectl get svc
+                        '''
+                    }
                 }
             }
         }
