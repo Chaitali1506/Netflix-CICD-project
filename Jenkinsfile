@@ -191,7 +191,7 @@ pipeline {
                     '''
                     sshagent(credentials: ['K3S-key']) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@3.110.229.177"mkdir -p ~/netflix/k8s"
+                        ssh -o StrictHostKeyChecking=no ubuntu@3.110.229.177 "mkdir -p ~/netflix/k8s"
 
                         scp -o StrictHostKeyChecking=no k3s/*.yaml \
                         ubuntu@3.110.229.177:~/netflix/k8s/
